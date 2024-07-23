@@ -1,0 +1,51 @@
+<div class="dataTable">
+ <div>
+  <div>user_id</div>
+  <div>user_name</div>
+  <div>first_name</div>
+  <div>last_name</div>
+  <div>email</div>
+  <div>user_status</div>
+  <div>department</div>
+  <div>Actions</div>
+ </div>
+ <ng-container *ngFor="let user of users">
+  <form>
+   <div>{{user.user_id}}</div>
+   <div><input type="text" required value="{{user.user_name}}" id="{{'user'+user.user_id+'username'}}"/></div>
+   <div><input type="text" required value="{{user.first_name}}" id="{{'user'+user.user_id+'firstname'}}"/></div>
+   <div><input type="text" required value="{{user.last_name}}" id="{{'user'+user.user_id+'lastname'}}"/></div>
+   <div><input type="text" required value="{{user.email}}" id="{{'user'+user.user_id+'email'}}"/></div>
+   <div>
+    <select required value="{{user.user_status}}"  id="{{'user'+user.user_id+'status'}}">
+     <option>I</option>
+     <option>A</option>
+     <option>T</option>
+    </select>
+   </div>
+   <div><input type="text" required value="{{user.department}}" id="{{'user'+user.user_id+'department'}}"/></div>
+   <div>
+    <button type="button" (click)="saveUser(user.user_id)">Save</button>
+    <button type="button" (click)="deleteUser(user.user_id)">Delete</button>
+   </div>
+  </form>
+ </ng-container>
+ <form #newUserForm>
+  <div>[New]</div>
+  <div><input type="text" #newUserName required/></div>
+  <div><input type="text" #newFirstName required/></div>
+  <div><input type="text" #newLastName required/></div>
+  <div><input type="text" #newEmail required/></div>
+  <div>
+   <select #newStatus required>
+    <option selected="selected">I</option>
+    <option>A</option>
+    <option>T</option>
+   </select>
+  </div>
+  <div><input type="text" #newDepartment/></div>
+  <div>
+   <button type="button" (click)="postUser(newUserName.value, newFirstName.value, newLastName.value, newEmail.value, newStatus.value, newDepartment.value, newUserForm)">Create</button>
+  </div>
+ </form>
+</div>

@@ -1,0 +1,54 @@
+services:
+  backend:
+    image: golang
+    ports:
+      - "8888:8888"
+    networks:
+      - mynet
+    hostname: backend
+    working_dir: /usr/src/app
+    command: sh -c "go run . && fg" 
+    volumes:
+      - type: bind
+        source: ./backend
+        target: /usr/src/app
+    environment:
+      HTTP_PORT: 8888
+      DATABASE_URL: postgresql://admin:password@postgres/GoAngularCrud
+
+  db:
+    image: postgres
+    restart: always
+    shm_size: 128mb
+    networks:
+      - mynet
+    ports:
+      - "5432:5432"
+    hostname: postgres
+    volumes:
+      - type: bind
+        source: ./sql.sh
+        target: /docker-entrypoint-initdb.d/sql.sh
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: GoAngularCrud
+
+  frontend:
+    image: node
+    ports:
+      - "4200:4200"
+    networks:
+      - mynet
+    hostname: frontend
+    working_dir: /usr/src/app
+    command: sh -c "apt update && apt -y install gettext-base && envsubst < /usr/src/app/src/assets/settings.template.json > /usr/src/app/src/assets/settings.json && npm install && npm install -g @angular/cli && ng serve --host 0.0.0.0 --public-host --disable-host-check true && fg"
+    volumes:
+      - type: bind
+        source: ./frontend
+        target: /usr/src/app
+    environment:
+      BACKEND_URL: http://localhost:8888
+
+networks:
+  mynet: {}
